@@ -1,0 +1,41 @@
+{
+  "name": "skillbridge",
+  "version": "1.0.0",
+  "description": "SkillBridge - AWS Learning Platform MVP",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [
+    "aws",
+    "learning",
+    "education",
+    "react",
+    "skillbridge"
+  ],
+  "author": "SkillBridge Team",
+  "license": "MIT",
+  "dependencies": {
+    "@aws-amplify/ui-react": "^6.13.2",
+    "aws-amplify": "^6.15.10",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^5.1.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
