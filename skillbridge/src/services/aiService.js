@@ -3,7 +3,42 @@ class AIService {
   constructor() {
     this.conversations = new Map(); // Store conversation history by session ID
     this.apiKey = process.env.REACT_APP_MUSE_API_KEY;
-    this.apiUrl = process.env.REACT_APP_MUSE_API_URL || 'https://api.openai.com/v1/chat/completions';
+    this.apiUrl = process.env.REACT_APP_MUSE_API_URL || 'https://openrouter.ai/api/v1/chat/completions';
+    
+    // Free models available on OpenRouter (as of 2024)
+    this.availableModels = {
+      'llama-3.1-8b': {
+        id: 'meta-llama/llama-3.1-8b-instruct:free',
+        name: 'Llama 3.1 8B',
+        description: 'Fast and capable, good for general conversations',
+        maxTokens: 2000,
+        free: true
+      },
+      'llama-3.2-3b': {
+        id: 'meta-llama/llama-3.2-3b-instruct:free',
+        name: 'Llama 3.2 3B',
+        description: 'Smaller but efficient, good for quick responses',
+        maxTokens: 1500,
+        free: true
+      },
+      'qwen-2.5-7b': {
+        id: 'qwen/qwen-2.5-7b-instruct:free',
+        name: 'Qwen 2.5 7B',
+        description: 'Excellent for coding and technical discussions',
+        maxTokens: 2000,
+        free: true
+      },
+      'mistral-7b': {
+        id: 'mistralai/mistral-7b-instruct:free',
+        name: 'Mistral 7B',
+        description: 'Great balance of performance and speed',
+        maxTokens: 1800,
+        free: true
+      }
+    };
+    
+    // Default model - Qwen is excellent for technical content
+    this.currentModel = this.availableModels['qwen-2.5-7b'];
     
     this.assistantProfiles = {
       'learning-assistant': {
@@ -236,13 +271,21 @@ class AIService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.apiKey}`,
           'HTTP-Referer': window.location.origin,
-          'X-Title': 'SkillBridge AI Assistant'
+          'X-Title': 'SkillBridge AI Assistant',
+          // OpenRouter specific headers
+          'Or-App-Name': 'SkillBridge',
+          'Or-Site-Url': window.location.origin
         },
         body: JSON.stringify({
-          model: 'meta-llama/llama-3.1-8b-instruct:free',
+          model: this.currentModel.id,
           messages: messages,
-          max_tokens: 1000,
-          temperature: 0.8
+          max_tokens: this.currentModel.maxTokens,
+          temperature: 0.8,
+          top_p: 0.9,
+          frequency_penalty: 0.1,
+          presence_penalty: 0.1,
+          // OpenRouter specific headers
+          stream: false
         })
       });
 
@@ -1073,6 +1116,45 @@ What AWS topic would you like to learn about?`;
       messageCount: conversation.messages.length,
       duration: new Date() - conversation.startTime,
       lastActivity: conversation.messages[conversation.messages.length - 1]?.timestamp
+    };
+  }
+
+  // Model management methods
+  setModel(modelKey) {
+    if (this.availableModels[modelKey]) {
+      this.currentModel = this.availableModels[modelKey];
+      console.log(`Switched to model: ${this.currentModel.name}`);
+      return true;
+    }
+    console.error(`Model ${modelKey} not found`);
+    return false;
+  }
+
+  getCurrentModel() {
+    return {
+      key: Object.keys(this.availableModels).find(key => 
+        this.availableModels[key].id === this.currentModel.id
+      ),
+      ...this.currentModel
+    };
+  }
+
+  getAvailableModels() {
+    return Object.entries(this.availableModels).map(([key, model]) => ({
+      key,
+      ...model,
+      isCurrent: model.id === this.currentModel.id
+    }));
+  }
+
+  // Enhanced API status with model info
+  getApiStatus() {
+    return {
+      configured: this.isApiConfigured(),
+      apiKey: this.apiKey ? `${this.apiKey.substring(0, 10)}...` : 'Not set',
+      apiUrl: this.apiUrl,
+      currentModel: this.getCurrentModel(),
+      availableModels: this.getAvailableModels()
     };
   }
 

@@ -4,11 +4,12 @@ import Dashboard from './Dashboard';
 import AIPathDashboard from './AIPathDashboard';
 import AIAssistant from './AIAssistant';
 import MultiAssistantChat from './MultiAssistantChat';
+import ModelSelector from './ModelSelector';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'ai-paths', 'ai-assistant', 'multi-chat'
+  const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard', 'ai-paths', 'ai-assistant', 'multi-chat', 'model-config'
   const [selectedAIPath, setSelectedAIPath] = useState(null);
 
   const handleLogin = (userData) => {
@@ -28,6 +29,10 @@ function App() {
 
   const handleNavigateToMultiChat = () => {
     setCurrentView('multi-chat');
+  };
+
+  const handleNavigateToModelConfig = () => {
+    setCurrentView('model-config');
   };
 
   const handleSelectAIPath = (pathId) => {
@@ -74,12 +79,24 @@ function App() {
             onBack={handleBackToDashboard}
           />
         );
+      case 'model-config':
+        return (
+          <div>
+            <div className="view-header">
+              <button className="back-btn" onClick={handleBackToDashboard}>
+                ← Back to Dashboard
+              </button>
+            </div>
+            <ModelSelector />
+          </div>
+        );
       default:
         return (
           <Dashboard 
             user={user} 
             onNavigateToAIPaths={handleNavigateToAIPaths}
             onNavigateToMultiChat={handleNavigateToMultiChat}
+            onNavigateToModelConfig={handleNavigateToModelConfig}
           />
         );
     }
@@ -87,7 +104,7 @@ function App() {
 
   return (
     <div className="App">
-      {currentView !== 'ai-assistant' && currentView !== 'multi-chat' && (
+      {currentView !== 'ai-assistant' && currentView !== 'multi-chat' && currentView !== 'model-config' && (
         <header className="App-header">
           <h1>SkillBridge</h1>
           <p>Your Personalized Learning Journey</p>
@@ -106,7 +123,7 @@ function App() {
           )}
         </header>
       )}
-      <main className={currentView === 'ai-assistant' || currentView === 'multi-chat' ? 'full-height' : ''}>
+      <main className={currentView === 'ai-assistant' || currentView === 'multi-chat' || currentView === 'model-config' ? 'full-height' : ''}>
         {renderCurrentView()}
       </main>
     </div>

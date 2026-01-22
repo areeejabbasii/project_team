@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { aiService } from './services/aiService';
 import './Dashboard.css';
 
-function Dashboard({ user, onNavigateToAIPaths, onNavigateToMultiChat }) {
+function Dashboard({ user, onNavigateToAIPaths, onNavigateToMultiChat, onNavigateToModelConfig }) {
   const [messages, setMessages] = useState([]);
   const [currentInput, setCurrentInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -92,6 +92,9 @@ function Dashboard({ user, onNavigateToAIPaths, onNavigateToMultiChat }) {
       <div className="dashboard-header">
         <h2>🚀 AWS Learning Assistant</h2>
         <div className="header-actions">
+          <button className="nav-btn" onClick={onNavigateToModelConfig}>
+            🤖 AI Models
+          </button>
           <button className="nav-btn" onClick={onNavigateToMultiChat}>
             Multi-Assistant Chat
           </button>

@@ -4,8 +4,8 @@
   "description": "SkillBridge - AWS Learning Platform MVP",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "set GENERATE_SOURCEMAP=false && react-scripts start",
+    "build": "set GENERATE_SOURCEMAP=false && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -19,8 +19,6 @@
   "author": "SkillBridge Team",
   "license": "MIT",
   "dependencies": {
-    "@aws-amplify/ui-react": "^6.13.2",
-    "aws-amplify": "^6.15.10",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-scripts": "^5.0.1",
